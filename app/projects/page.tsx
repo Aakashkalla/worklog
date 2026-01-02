@@ -1,7 +1,8 @@
-import React from 'react'
 import { createProject } from './actions'
+import { prisma } from '@/lib/prisma'
 
-const Project = () => {
+ const Project = async () => {
+    const projects = await prisma.project.findMany();
   return (
     <main className="p-6">
         <h1 className="text-2xl font-semibold">Projects</h1>
@@ -19,7 +20,13 @@ const Project = () => {
         </form>
 
         <div className="mt-6">
+        {projects.length === 0 ? (
         <p className="text-gray-500">No projects yet</p>
+        ) : (
+        projects.map((project) => (
+        <div key={project.id}>{project.name}</div>
+        ))
+        )}
         </div>
     </main>
   )
