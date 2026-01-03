@@ -1,6 +1,7 @@
 "use server"
 
 import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export async function createProject(formData : FormData){
     const projectName = formData.get("projectName");
@@ -15,4 +16,6 @@ export async function createProject(formData : FormData){
             name : trimmedName
         }
     })
+
+    revalidatePath('/projects')
 }
