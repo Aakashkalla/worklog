@@ -24,3 +24,20 @@ export async function createProject(formData : FormData){
 
     revalidatePath('/projects')
 }
+
+export async function deleteProject(formData : FormData) {
+    const session = await getServerSession(authOptions);
+    if (!session) return;
+    const userId = session.user.id;
+    const projectId = formData.get("projectId")
+    if (!projectId || typeof projectId !== "string") return;
+
+    await prisma.project.deleteMany({
+    where: {
+        id: projectId,
+        userId,
+    },
+  });
+
+    revalidatePath('/projects')
+}

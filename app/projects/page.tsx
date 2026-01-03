@@ -1,4 +1,4 @@
-import { createProject } from './actions'
+import { createProject, deleteProject } from './actions'
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
@@ -39,11 +39,28 @@ import Link from "next/link";
         <p className="text-gray-500">No projects yet</p>
         ) : (
         projects.map((project) => (
-          <Link key={project.id} href={`/projects/${project.id}`} 
-          className='block rounded border px-4 py-3 hover:bg-neutral-100 transition'>
-            {project.name}
+          <div
+          key={project.id}
+          className="flex items-center justify-between rounded border px-4 py-3 mb-2"
+          >
+          <Link
+          href={`/projects/${project.id}`}
+          className="font-medium hover:underline"
+          >
+          {project.name}
           </Link>
-        ))
+
+          <form action={deleteProject}>
+          <input type="hidden" name="projectId" value={project.id} />
+          <button
+          type="submit"
+          className="text-sm text-red-600 hover:underline"
+          >
+          Delete
+          </button>
+          </form>
+          </div>
+          ))
         )}
         </div>
     </main>
