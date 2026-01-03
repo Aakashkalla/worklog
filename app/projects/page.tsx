@@ -1,7 +1,13 @@
 import { createProject } from './actions'
 import { prisma } from '@/lib/prisma'
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
  const Project = async () => {
+    const session = await getServerSession();
+    if(!session){
+      redirect('/login')
+    }
     const projects = await prisma.project.findMany();
   return (
     <main className="p-6">
