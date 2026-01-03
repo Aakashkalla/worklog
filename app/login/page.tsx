@@ -2,20 +2,28 @@
 
 import { signIn } from "next-auth/react"
 import { useRef } from "react"
+import { useRouter } from "next/navigation";
+
 const page = () => {
+    const router = useRouter();
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
+
     const handleLogin = async ()=>{
         const email = emailRef.current?.value;
         const password = passwordRef.current?.value;
 
         if(!email || !password) return
 
-        await signIn("credentials", {
+        const result = await signIn("credentials", {
             email,
             password,
             redirect : false
         });
+
+        if(result?.ok){
+            router.push("/projects")
+        }
         if (emailRef.current) emailRef.current.value = "";
         if (passwordRef.current) passwordRef.current.value = "";
     };
