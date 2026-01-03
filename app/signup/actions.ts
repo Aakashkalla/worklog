@@ -1,6 +1,7 @@
 "use server"
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcrypt";
+import { redirect } from "next/navigation";
 
 export async function createUser(formData : FormData){
     const email = formData.get("email")
@@ -29,4 +30,5 @@ export async function createUser(formData : FormData){
         }
     })
 
+    redirect("/login");
 }
