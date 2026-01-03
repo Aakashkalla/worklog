@@ -1,6 +1,8 @@
 "use server"
 
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 
 export async function createTask(formData : FormData){
@@ -24,4 +26,26 @@ export async function createTask(formData : FormData){
     })
 
     revalidatePath(`/projects/${projectId}`)
+}
+
+export async function deleteTask(formData:FormData){
+    const taskId = formData.get("taskId");
+    const projectId = formData.get("projectId");
+
+    if (!taskId || typeof taskId !== "string") return;
+    if (!projectId || typeof projectId !== "string") return;
+
+    const session = await getServerSession(authOptions);
+    if (!session) return;
+
+    await prisma.task.deleteMany({
+    where: {
+        id: taskId,
+        project: {
+            userId: session.user.id,
+            },
+        },
+    });
+
+    revalidatePath(`/projects/${projectId}`);
 }

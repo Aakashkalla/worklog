@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma"
-import { createTask } from "./actions"
+import { createTask, deleteTask } from "./actions"
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
@@ -27,8 +27,23 @@ const page = async ({params} : {params : {projectId : string}}) => {
                 <h1>{project.name}</h1>
                 {project.tasks.length===0 ? (<>No Tasks Yet</>) :(
                     <>
-                    {project.tasks.map((task)=>(
-                        <div key={task.id}>{task.title} {task.status}</div>
+                    {project.tasks.map((task) => (
+                        <div
+                        key={task.id}
+                        className="flex items-center justify-between border rounded px-3 py-2 mb-2"
+                        >
+                        <span>{task.title}</span>
+                        <form action={deleteTask}>
+                        <input type="hidden" name="taskId" value={task.id} />
+                        <input type="hidden" name="projectId" value={project.id} />
+                        <button
+                        type="submit"
+                        className="text-sm text-red-600 hover:underline"
+                        >
+                        Delete
+                        </button>
+                        </form>
+                        </div>
                     ))}
                     </>
                 ) 
