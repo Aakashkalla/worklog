@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
 import { authOptions } from '../api/auth/[...nextauth]/route';
+import Link from "next/link";
 
  const Project = async () => {
     noStore()
@@ -38,7 +39,10 @@ import { authOptions } from '../api/auth/[...nextauth]/route';
         <p className="text-gray-500">No projects yet</p>
         ) : (
         projects.map((project) => (
-        <div key={project.id}>{project.name}</div>
+          <Link key={project.id} href={`/projects/${project.id}`} 
+          className='block rounded border px-4 py-3 hover:bg-neutral-100 transition'>
+            {project.name}
+          </Link>
         ))
         )}
         </div>
