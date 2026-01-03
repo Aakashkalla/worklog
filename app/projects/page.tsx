@@ -8,7 +8,12 @@ import { redirect } from "next/navigation";
     if(!session){
       redirect('/login')
     }
-    const projects = await prisma.project.findMany();
+    const userId = session.user.id;
+    const projects = await prisma.project.findMany({
+      where : {
+        userId
+      }
+    });
   return (
     <main className="p-6">
         <h1 className="text-2xl font-semibold">Projects</h1>
