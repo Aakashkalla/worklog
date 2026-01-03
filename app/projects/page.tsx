@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
 import { authOptions } from '../api/auth/[...nextauth]/route';
 import Link from "next/link";
+import LogoutButton from "@/app/components/LogoutButton"
+
 
  const Project = async () => {
     noStore()
@@ -30,7 +32,8 @@ import Link from "next/link";
             Manage your projects and tasks
           </p>
         </div>
-
+        <LogoutButton/>
+        
         {/* Create project */}
         <form
           action={createProject}
