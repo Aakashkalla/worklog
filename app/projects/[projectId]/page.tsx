@@ -2,11 +2,13 @@ import { prisma } from "@/lib/prisma"
 
 const page = async ({params} : {params : {projectId : string}}) => {
     const { projectId } = await params
-    console.log(projectId)
     try{
         const project = await prisma.project.findUnique({
             where : {
                 id : projectId
+            }, 
+            include :{
+                tasks : true
             }
         })
 
@@ -14,6 +16,14 @@ const page = async ({params} : {params : {projectId : string}}) => {
             return(
                 <main>
                 <h1>{project.name}</h1>
+                {project.tasks.length===0 ? (<>No Tasks Yet</>) :(
+                    <>
+                    {project.tasks.map((task)=>(
+                        <div key={task.id}>{task.title}</div>
+                    ))}
+                    </>
+                ) 
+                }
                 </main>
             )
         }
