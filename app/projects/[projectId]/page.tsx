@@ -1,12 +1,20 @@
 import { prisma } from "@/lib/prisma"
 import { createTask } from "./actions"
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
+import { unstable_noStore as noStore } from "next/cache";
 
 const page = async ({params} : {params : {projectId : string}}) => {
+    noStore()
     const { projectId } = await params
+    const session = await getServerSession(authOptions);
+    if (!session) redirect("/login");
     try{
-        const project = await prisma.project.findUnique({
+        const project = await prisma.project.findFirst({
             where : {
-                id : projectId
+                id : projectId,
+                userId : session.user.id
             }, 
             include :{
                 tasks : true

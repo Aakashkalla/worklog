@@ -2,9 +2,12 @@ import { createProject } from './actions'
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { unstable_noStore as noStore } from "next/cache";
+import { authOptions } from '../api/auth/[...nextauth]/route';
 
  const Project = async () => {
-    const session = await getServerSession();
+    noStore()
+    const session = await getServerSession(authOptions);
     if(!session){
       redirect('/login')
     }
